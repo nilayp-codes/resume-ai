@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>{{ data.basic_info.full_name or 'Resume' }}</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+        :root {
+            --font: {
+                    {
+                    font_family
+                }
+            }
+
+            ;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font);
+            font-size: 10pt;
+            color: #111827;
+            background: #fff;
+        }
+
+        /*
+         * ATS COMPLIANCE:
+         * Ensure sidebar appears AFTER main content in DOM for ATS parsing
+         * but is visually positioned using CSS Grid layout.
+         * Avoid absolute positioning. Ensure exported PDF text remains selectable.
+         */
+        .layout {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            min-height: 100vh;
+        }
+
+        /* ─── Main Content (first in DOM) ────────── */
+        .main {
+            padding: 0.45in 0.4in 0.45in 0.5in;
+            background: #ffffff;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 14px;
+        }
+
+        .header h1 {
+            font-size: 20pt;
+            font-weight: 800;
+            color: #111827;
+            letter-spacing: -0.5px;
+            line-height: 1.2;
+        }
+
+        .header .job-title {
+            font-size: 10pt;
+            color: #6b7280;
+            font-weight: 500;
+            margin-top: 3px;
+        }
+
+        .photo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2.5px solid #e5e7eb;
+            flex-shrink: 0;
+        }
+
+        .section {
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-size: 9.5pt;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #111827;
+            border-bottom: 1.5px solid #e5e7eb;
+            padding-bottom: 3px;
+            margin-bottom: 10px;
+        }
+
+        .entry {
+            margin-bottom: 11px;
+        }
+
+        .entry-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+
+        .entry-title {
+            font-weight: 600;
+            font-size: 10pt;
+        }
+
+        .entry-subtitle {
+            font-size: 9pt;
+            color: #6b7280;
+            font-style: italic;
+        }
+
+        .entry-date {
+            font-size: 8.5pt;
+            color: #9ca3af;
+            white-space: nowrap;
+        }
+
+        .entry-desc {
+            margin-top: 3px;
+            color: #333;
+            font-size: 9.5pt;
+        }
+
+        ul.bullets {
+            margin-top: 4px;
+            padding-left: 16px;
+        }
+
+        ul.bullets li {
+            margin-bottom: 3px;
+            color: #333;
+            font-size: 9.5pt;
+        }
+
+        /* ─── Dark Sidebar (after main in DOM) ─── */
+        .sidebar {
+            background: #18181b;
+            color: #e4e4e7;
+            padding: 0.45in 0.3in;
+        }
+
+        .sidebar-section {
+            margin-bottom: 16px;
+        }
+
+        .sidebar-title {
+            font-size: 8pt;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #fafafa;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+            padding-bottom: 4px;
+            margin-bottom: 9px;
+        }
+
+        .sidebar p {
+            font-size: 8.5pt;
+            color: #a1a1aa;
+            margin-bottom: 4px;
+        }
+
+        .sidebar a {
+            color: #a1a1aa;
+            text-decoration: none;
+            font-size: 8.5pt;
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        .sidebar .skill-category {
+            font-size: 7pt;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #a1a1aa;
+            margin-bottom: 5px;
+        }
+
+        .sidebar ul {
+            padding-left: 14px;
+            margin: 0 0 10px;
+        }
+
+        .sidebar ul li {
+            font-size: 8.5pt;
+            color: #e4e4e7;
+            margin-bottom: 2px;
+        }
+
+        .cert-item {
+            margin-bottom: 7px;
+        }
+
+        .cert-item strong {
+            display: block;
+            font-size: 8.5pt;
+            color: #fafafa;
+        }
+
+        .cert-item span {
+            font-size: 8pt;
+            color: #a1a1aa;
+        }
+
+        @page {
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="layout">
+
+        <!-- MAIN CONTENT FIRST (ATS compliance) -->
+        <div class="main">
+
+            <!-- Header with Name + Photo -->
+            <div class="header">
+                <div>
+                    <h1>{{ data.basic_info.full_name or 'Your Name' }}</h1>
+                    {% if data.basic_info.job_title %}
+                    <div class="job-title">{{ data.basic_info.job_title }}</div>
+                    {% endif %}
+                </div>
+                {% if data.basic_info.photo_url %}
+                <img class="photo" src="{{ data.basic_info.photo_url }}" alt="Profile photo" />
+                {% endif %}
+            </div>
+
+            <!-- Summary -->
+            {% if data.summary %}
+            <div class="section">
+                <h2 class="section-title">Summary</h2>
+                <p style="color:#4b5563;font-size:9.5pt;line-height:1.6;text-align:justify;">{{ data.summary }}</p>
+            </div>
+            {% endif %}
+
+            <!-- Work Experience -->
+            {% if data.experience %}
+            <div class="section">
+                <h2 class="section-title">Work Experience</h2>
+                {% for exp in data.experience %}
+                <div class="entry">
+                    <div class="entry-header">
+                        <div>
+                            <span class="entry-title">{{ exp.position }}</span>
+                            {% if exp.company %}<br><span class="entry-subtitle">{{ exp.company }}</span>{% endif %}
+                        </div>
+                        <span class="entry-date">{{ exp.start_date }}{% if exp.end_date %} – {{ 'Present' if exp.current
+                            else exp.end_date }}{% endif %}</span>
+                    </div>
+                    {% if exp.description %}<div class="entry-desc">{{ exp.description }}</div>{% endif %}
+                    {% if exp.bullets %}
+                    <ul class="bullets">{% for b in exp.bullets %}{% if b %}<li>{{ b }}</li>{% endif %}{% endfor %}</ul>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Education -->
+            {% if data.education %}
+            <div class="section">
+                <h2 class="section-title">Education</h2>
+                {% for edu in data.education %}
+                <div class="entry">
+                    <div class="entry-header">
+                        <div>
+                            <span class="entry-title">{{ edu.degree }}{% if edu.field_of_study %} in {{
+                                edu.field_of_study }}{% endif %}</span>
+                            {% if edu.institution %}<br><span class="entry-subtitle">{{ edu.institution }}</span>{%
+                            endif %}
+                        </div>
+                        <span class="entry-date">{{ edu.start_date }}{% if edu.end_date %} – {{ edu.end_date }}{% endif
+                            %}{% if edu.gpa %} | GPA: {{ edu.gpa }}{% endif %}</span>
+                    </div>
+                    {% if edu.achievements %}<div class="entry-desc">{{ edu.achievements }}</div>{% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Projects -->
+            {% if data.projects %}
+            <div class="section">
+                <h2 class="section-title">Projects</h2>
+                {% for proj in data.projects %}
+                <div class="entry">
+                    <div class="entry-header">
+                        <span class="entry-title">{{ proj.name }}{% if proj.tech_stack %} <span
+                                style="font-weight:400;font-size:9pt;color:#6b7280">· {{ proj.tech_stack }}</span>{%
+                            endif
+                            %}</span>
+                        <span class="entry-date">{% if proj.github %}<a href="{{ proj.github }}"
+                                style="color:#9ca3af">GitHub</a>{% endif %}{% if proj.url %}{% if proj.github %} | {%
+                            endif
+                            %}<a href="{{ proj.url }}" style="color:#9ca3af">Live</a>{% endif %}</span>
+                    </div>
+                    {% if proj.description %}<div class="entry-desc">{{ proj.description }}</div>{% endif %}
+                    {% if proj.bullets %}
+                    <ul class="bullets">{% for b in proj.bullets %}{% if b %}<li>{{ b }}</li>{% endif %}{% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+        </div>
+
+        <!-- SIDEBAR AFTER MAIN (ATS compliance) -->
+        <div class="sidebar">
+
+            <!-- Contact -->
+            <div class="sidebar-section">
+                <div class="sidebar-title">Contact</div>
+                {% if data.basic_info.email %}<a href="mailto:{{ data.basic_info.email }}">{{ data.basic_info.email
+                    }}</a>{% endif %}
+                {% if data.basic_info.phone %}<p>{{ data.basic_info.phone }}</p>{% endif %}
+                {% if data.basic_info.location %}<p>{{ data.basic_info.location }}</p>{% endif %}
+            </div>
+
+            <!-- Skills -->
+            {% if data.skills %}
+            <div class="sidebar-section">
+                <div class="sidebar-title">Skills</div>
+                {% if data.skills.technical %}
+                <div>
+                    <div class="skill-category">Technical</div>
+                    <ul>
+                        {% for s in data.skills.technical %}<li>{{ s }}</li>{% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+                {% if data.skills.tools %}
+                <div>
+                    <div class="skill-category">Tools</div>
+                    <ul>
+                        {% for s in data.skills.tools %}<li>{{ s }}</li>{% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+                {% if data.skills.languages %}
+                <div>
+                    <div class="skill-category">Languages</div>
+                    <ul>
+                        {% for s in data.skills.languages %}<li>{{ s }}</li>{% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+                {% if data.skills.soft %}
+                <div>
+                    <div class="skill-category">Soft Skills</div>
+                    <ul>
+                        {% for s in data.skills.soft %}<li>{{ s }}</li>{% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+            {% endif %}
+
+            <!-- Links -->
+            {% if data.basic_info.linkedin or data.basic_info.github or data.basic_info.website %}
+            <div class="sidebar-section">
+                <div class="sidebar-title">Links</div>
+                {% if data.basic_info.linkedin %}<a href="{{ data.basic_info.linkedin }}">LinkedIn</a>{% endif %}
+                {% if data.basic_info.github %}<a href="{{ data.basic_info.github }}">GitHub</a>{% endif %}
+                {% if data.basic_info.website %}<a href="{{ data.basic_info.website }}">Portfolio</a>{% endif %}
+            </div>
+            {% endif %}
+
+            <!-- Certifications -->
+            {% if data.certifications %}
+            <div class="sidebar-section">
+                <div class="sidebar-title">Certifications</div>
+                {% for cert in data.certifications %}
+                <div class="cert-item">
+                    <strong>{{ cert.name }}</strong>
+                    <span>{{ cert.issuer }}{% if cert.date %} · {{ cert.date }}{% endif %}</span>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,36 @@
+# Environment variables
+.env
+.env.local
+.env.production
+.env.development
+.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*.db
+*.sqlite3
+.venv/
+venv/
+
+# Node
+node_modules/
+.next/
+out/
+
+# Uploads
+backend/uploads/*.jpg
+backend/uploads/*.png
+backend/uploads/*.jpeg
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
