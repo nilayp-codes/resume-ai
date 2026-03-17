@@ -1,14 +1,6 @@
 """
-PDF generation service using Playwright (headless Chromium).
-
-Runs Playwright in a separate subprocess using blocking subprocess.run().
-The FastAPI route calls this synchronously — no async event loop involvement.
-
-Key features:
-- Sets viewport to 794x1123 to match A4 exactly
-- Uses pixel dimensions (not "A4" format) to prevent scaling
-- Adds 500ms timeout after networkidle to ensure images load
-- Frontend sends a full HTML document with fonts already embedded
+PDF generation service.
+Uses Browserless.io API in production, falls back to local Playwright in development.
 """
 import subprocess
 import sys
@@ -16,11 +8,12 @@ import tempfile
 import os
 import logging
 import traceback
+import httpx
+from app.config import settings
 
 logger = logging.getLogger(__name__)
 
 _PYTHON = sys.executable
-
 
 _PLAYWRIGHT_SCRIPT_TEMPLATE = '''
 import sys
@@ -38,10 +31,7 @@ with sync_playwright() as p:
     page.set_viewport_size({"width": 794, "height": 1123})
     page.set_content(html)
     page.wait_for_load_state("networkidle")
-
-    # Extra wait to ensure fonts fully load
     page.wait_for_timeout(500)
-
     page.pdf(
         path=pdf_path,
         format="A4",
@@ -49,44 +39,81 @@ with sync_playwright() as p:
         margin={"top": "0px", "right": "0px", "bottom": "0px", "left": "0px"},
     )
     browser.close()
-
 print("PDF_OK")
 '''
 
 
 def generate_resume_pdf_sync(html_content: str) -> bytes:
-    """
-    Generate PDF by running Playwright in a separate subprocess.
-    This is a BLOCKING call — the route runs it in FastAPI's thread pool.
+    """Generate PDF using Browserless API in production, local Playwright in development."""
 
-    The frontend sends a complete HTML document with fonts and styles
-    already embedded, so no server-side wrapping is needed.
-    """
+    browserless_token = getattr(settings, 'BROWSERLESS_API_KEY', None) or os.getenv('BROWSERLESS_API_KEY')
+
+    if browserless_token:
+        return _generate_with_browserless(html_content, browserless_token)
+    else:
+        logger.info("No BROWSERLESS_API_KEY found, using local Playwright")
+        return _generate_with_playwright(html_content)
+
+
+def _generate_with_browserless(html_content: str, token: str) -> bytes:
+    """Generate PDF using Browserless.io cloud API."""
+    logger.info("Generating PDF via Browserless.io")
+
+    url = f"https://production-sfo.browserless.io/pdf?token={token}"
+
+    payload = {
+        "html": html_content,
+        "options": {
+            "format": "A4",
+            "printBackground": True,
+            "margin": {
+                "top": "0px",
+                "right": "0px",
+                "bottom": "0px",
+                "left": "0px"
+            }
+        },
+        "gotoOptions": {
+            "waitUntil": "networkidle2",
+            "timeout": 30000
+        }
+    }
+
+    with httpx.Client(timeout=60.0) as client:
+        response = client.post(
+            url,
+            json=payload,
+            headers={"Content-Type": "application/json"}
+        )
+
+    if response.status_code != 200:
+        logger.error(f"Browserless API error: {response.status_code} - {response.text[:500]}")
+        raise RuntimeError(f"Browserless API failed with status {response.status_code}")
+
+    pdf_bytes = response.content
+    logger.info(f"Generated PDF via Browserless: {len(pdf_bytes)} bytes")
+    return pdf_bytes
+
+
+def _generate_with_playwright(html_content: str) -> bytes:
+    """Generate PDF using local Playwright (development fallback)."""
     html_path = None
     pdf_path = None
     script_path = None
     try:
-        # Write HTML directly to temp file (frontend sends full document)
-        with tempfile.NamedTemporaryFile(
-            mode="w", suffix=".html", delete=False, encoding="utf-8"
-        ) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".html", delete=False, encoding="utf-8") as f:
             f.write(html_content)
             html_path = f.name
 
         pdf_path = html_path.replace(".html", ".pdf")
 
-        # Write the Playwright script to a temp file (avoids shell escaping)
-        with tempfile.NamedTemporaryFile(
-            mode="w", suffix=".py", delete=False, encoding="utf-8"
-        ) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".py", delete=False, encoding="utf-8") as f:
             f.write(_PLAYWRIGHT_SCRIPT_TEMPLATE)
             script_path = f.name
 
         result = subprocess.run(
             [_PYTHON, script_path, html_path, pdf_path],
-            capture_output=True,
-            text=True,
-            timeout=60,
+            capture_output=True, text=True, timeout=60,
         )
 
         if result.returncode != 0:
@@ -104,10 +131,8 @@ def generate_resume_pdf_sync(html_content: str) -> bytes:
         return pdf_bytes
 
     except Exception as e:
-        print("PDF GENERATION ERROR:")
         traceback.print_exc()
         raise
-
     finally:
         for path in (html_path, pdf_path, script_path):
             if path and os.path.exists(path):
