@@ -1,4 +1,4 @@
-# ResumeGen — Production-Ready Resume Generator SaaS
+# ResumeAI — Production-Ready Resume Generator SaaS
 
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.109-009688?style=flat&logo=fastapi)](https://fastapi.tiangolo.com/)
 [![Next.js](https://img.shields.io/badge/Next.js-15-black?style=flat&logo=next.js)](https://nextjs.org/)
