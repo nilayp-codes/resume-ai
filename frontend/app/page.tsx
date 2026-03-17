@@ -35,32 +35,32 @@ export default function HomePage() {
       <BackgroundGlow />
 
       {/* Hero Section */}
-      <motion.div initial="hidden" whileInView="visible" viewport={{ once: false, margin: "-100px" }} variants={sectionVariants}>
+      <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={sectionVariants}>
         <Hero authed={authed} />
       </motion.div>
 
       {/* Feature Highlights */}
-      <motion.div initial="hidden" whileInView="visible" viewport={{ once: false, margin: "-100px" }} variants={sectionVariants}>
+      <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={sectionVariants}>
         <Features />
       </motion.div>
 
       {/* Templates Showcase */}
-      <motion.div initial="hidden" whileInView="visible" viewport={{ once: false, margin: "-100px" }} variants={sectionVariants}>
+      <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={sectionVariants}>
         <TemplatesShowcase />
       </motion.div>
 
       {/* AI Demo (New Section) */}
-      <motion.div initial="hidden" whileInView="visible" viewport={{ once: false, margin: "-100px" }} variants={sectionVariants}>
+      <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={sectionVariants}>
         <AiDemo />
       </motion.div>
 
       {/* AI Workflow Steps */}
-      <motion.div initial="hidden" whileInView="visible" viewport={{ once: false, margin: "-100px" }} variants={sectionVariants}>
+      <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={sectionVariants}>
         <Workflow />
       </motion.div>
 
       {/* Final Call To Action */}
-      <motion.div initial="hidden" whileInView="visible" viewport={{ once: false, margin: "-100px" }} variants={sectionVariants}>
+      <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={sectionVariants}>
         <CTA authed={authed} />
       </motion.div>
 

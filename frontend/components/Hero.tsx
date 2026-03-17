@@ -25,7 +25,7 @@ export default function Hero({ authed }: HeroProps) {
                         initial={{ opacity: 0, y: 40 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6, ease: "easeOut" }}
-                        viewport={{ once: false, margin: "-100px" }}
+                        viewport={{ once: true, margin: "-50px" }}
                         style={{
                             fontSize: 'clamp(36px, 6vw, 72px)', fontWeight: 800, letterSpacing: '-0.03em',
                             lineHeight: 1.1, color: '#111827', margin: 0,
@@ -44,7 +44,7 @@ export default function Hero({ authed }: HeroProps) {
                         initial={{ opacity: 0, y: 30 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6, delay: 0.15, ease: "easeOut" }}
-                        viewport={{ once: false, margin: "-100px" }}
+                        viewport={{ once: true, margin: "-50px" }}
                         style={{
                             marginTop: 24, fontSize: 18, lineHeight: 1.7,
                             color: '#6b7280', maxWidth: 540,
@@ -59,7 +59,7 @@ export default function Hero({ authed }: HeroProps) {
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
-                        viewport={{ once: false, margin: "-100px" }}
+                        viewport={{ once: true, margin: "-50px" }}
                         style={{ marginTop: 40, display: 'flex', alignItems: 'center', gap: 16 }}
                     >
                         <Link href={authed ? '/create-resume' : '/register'} style={{
@@ -114,7 +114,7 @@ export default function Hero({ authed }: HeroProps) {
                     viewport={{ once: true }}
                 >
                     <motion.div
-                        animate={{ y: [0, -12, 0] }}
+                        animate={{ y: [0, -8, 0] }}
                         transition={{ repeat: Infinity, duration: 6, ease: 'easeInOut' }}
                         style={{
                             position: 'relative',
@@ -148,7 +148,7 @@ export default function Hero({ authed }: HeroProps) {
                         </div>
                         <motion.div
                             animate={{ x: ['-200%', '200%'] }}
-                            transition={{ repeat: Infinity, duration: 4, ease: 'linear' }}
+                            transition={{ repeat: Infinity, duration: 6, ease: 'linear' }}
                             style={{
                                 position: 'absolute', top: 0, left: 0, width: '40%', height: '100%',
                                 background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.7), transparent)',

@@ -15,7 +15,7 @@ export default function CTA({ authed }: CTAProps) {
                 initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, ease: "easeOut" }}
-                viewport={{ once: false, margin: "-100px" }}
+                viewport={{ once: true, margin: "-50px" }}
                 style={{
                     maxWidth: 760, margin: '0 auto', textAlign: 'center' as const,
                     background: 'linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%)',

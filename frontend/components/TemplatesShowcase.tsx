@@ -56,7 +56,7 @@ export default function TemplatesShowcase() {
                     initial={{ opacity: 0, y: 40 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, ease: "easeOut" }}
-                    viewport={{ once: false, margin: "-100px" }}
+                    viewport={{ once: true, margin: "-50px" }}
                     style={{ textAlign: 'center', marginBottom: 56 }}
                 >
                     <p style={{ fontSize: 14, fontWeight: 600, color: '#2563eb', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>
@@ -76,8 +76,8 @@ export default function TemplatesShowcase() {
                             key={tpl.id}
                             initial={{ opacity: 0, y: 40 }}
                             whileInView={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.6, delay: i * 0.1, ease: "easeOut" }}
-                            viewport={{ once: false, margin: "-100px" }}
+                            transition={{ duration: 0.6, delay: i * 0.06, ease: "easeOut" }}
+                            viewport={{ once: true, margin: "-50px" }}
                             style={{
                                 borderRadius: 16, background: '#ffffff', overflow: 'hidden',
                                 boxShadow: '0 10px 30px rgba(0,0,0,0.06)',

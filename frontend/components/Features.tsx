@@ -36,7 +36,7 @@ export default function Features() {
                     initial={{ opacity: 0, y: 40 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, ease: "easeOut" }}
-                    viewport={{ once: false, margin: "-100px" }}
+                    viewport={{ once: true, margin: "-50px" }}
                     style={{ textAlign: 'center' as const, marginBottom: 56 }}
                 >
                     <p style={{ fontSize: 14, fontWeight: 600, color: '#2563eb', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>Why ResumeAI</p>
@@ -58,8 +58,8 @@ export default function Features() {
                             key={f.title}
                             initial={{ opacity: 0, y: 40 }}
                             whileInView={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.6, delay: i * 0.12, ease: "easeOut" }}
-                            viewport={{ once: false, margin: "-100px" }}
+                            transition={{ duration: 0.6, delay: i * 0.08, ease: "easeOut" }}
+                            viewport={{ once: true, margin: "-50px" }}
                             style={{
                                 background: 'rgba(255, 255, 255, 0.85)',
                                 backdropFilter: 'blur(12px)',
