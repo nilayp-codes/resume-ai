@@ -106,6 +106,9 @@ export function ExecutiveTemplate({ data }: TemplateProps) {
                     )}
                 </div>
 
+                {/* Divider under header */}
+                <div style={{ borderBottom: '1.5px solid #e5e7eb', marginBottom: 16 }} />
+
                 {/* Summary */}
                 {data.summary && (
                     <div className="resume-section" style={{ marginBottom: 18, breakInside: 'avoid' as const, pageBreakInside: 'avoid' as const }}>
