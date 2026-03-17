@@ -804,7 +804,7 @@ function FormContent() {
             </header>
 
             {/* 3-Column Grid */}
-            <div style={{ display: 'grid', gridTemplateColumns: '80px 1fr 620px', height: 'calc(100vh - 49px)' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '80px 1fr', height: 'calc(100vh - 49px)' }}>
                 {/* Icon Sidebar */}
                 <aside style={{ borderRight: '1px solid #e5e7eb', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, paddingTop: 32, background: '#ffffff' }}>
                     {STEPS.map((s, i) => (
@@ -852,7 +852,7 @@ function FormContent() {
                 </main>
 
                 {/* Live Preview */}
-                <aside style={{ borderLeft: '1px solid #e5e7eb', background: '#f1f5f9', overflowY: 'auto', padding: '32px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <aside className="preview-aside" style={{ borderLeft: '1px solid #e5e7eb', background: '#f1f5f9', overflowY: 'auto', padding: '32px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', marginBottom: 20 }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                             <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#22c55e', animation: 'pulse 2s infinite' }} />

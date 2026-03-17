@@ -234,3 +234,15 @@ body {
   gap: 24px;
   margin-top: 30px;
 }
+
+@media (max-width: 768px) {
+  .resume-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 1024px) {
+  .preview-aside {
+    display: none !important;
+  }
+}

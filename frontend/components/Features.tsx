@@ -52,7 +52,7 @@ export default function Features() {
                 </motion.div>
 
                 {/* Feature Cards */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 28 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 28 }}>
                     {features.map((f, i) => (
                         <motion.div
                             key={f.title}

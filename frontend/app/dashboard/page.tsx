@@ -209,7 +209,7 @@ export default function DashboardPage() {
                 top: 0, 
                 zIndex: 50 
             }}>
-                <div style={{ maxWidth: 1120, margin: '0 auto', padding: '16px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div style={{ maxWidth: 1120, margin: '0 auto', padding: '16px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap' as const, gap: 8 }}>
                     <Link href="/" style={{ fontSize: 20, fontWeight: 700, color: '#111827', textDecoration: 'none', letterSpacing: '-0.02em' }}>
                         ResumeAI
                     </Link>

@@ -17,7 +17,7 @@ export default function Hero({ authed }: HeroProps) {
         <section style={{ position: 'relative', overflow: 'hidden', padding: '140px 24px 100px', background: '#ffffff' }}>
             <AnimatedBackground />
 
-            <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 64, position: 'relative', zIndex: 10 }}>
+            <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 64, position: 'relative', zIndex: 10, flexWrap: 'wrap' as const }}>
                 {/* Left side text */}
                 <div style={{ flex: 1 }}>
                     {/* Headline */}
@@ -27,7 +27,7 @@ export default function Hero({ authed }: HeroProps) {
                         transition={{ duration: 0.6, ease: "easeOut" }}
                         viewport={{ once: false, margin: "-100px" }}
                         style={{
-                            fontSize: 72, fontWeight: 800, letterSpacing: '-0.03em',
+                            fontSize: 'clamp(36px, 6vw, 72px)', fontWeight: 800, letterSpacing: '-0.03em',
                             lineHeight: 1.1, color: '#111827', margin: 0,
                         }}
                     >
@@ -107,7 +107,7 @@ export default function Hero({ authed }: HeroProps) {
 
                 {/* Right side floating mockup */}
                 <motion.div
-                    style={{ flex: 1, y: mockupY }}
+                    style={{ flex: '1 1 400px', minWidth: 300, y: mockupY }}
                     initial={{ opacity: 0, x: 40 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.8, ease: "easeOut" }}
