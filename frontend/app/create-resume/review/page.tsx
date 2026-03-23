@@ -6,10 +6,12 @@ import { toast } from 'sonner';
 import { ChevronLeft, Download, Edit3, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { resumeApi } from '@/lib/api';
-import { isAuthenticated } from '@/lib/auth';
+import { isAuthenticated, getToken } from '@/lib/auth';
 import type { ResumeData } from '@/lib/types';
 import { DEFAULT_RESUME_DATA } from '@/lib/types';
 import TemplateRenderer from '@/components/resume/TemplateRenderer';
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://resume-ai-xrs5.onrender.com';
 
 function ReviewContent() {
     const router = useRouter();
@@ -114,9 +116,10 @@ ${clone.outerHTML}
 </html>`;
 
             // Send to backend for PDF generation via Playwright
-            const response = await fetch("http://localhost:8000/pdf/generate", {
+            const token = getToken();
+            const response = await fetch(`${API_BASE_URL}/pdf/generate`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: { "Content-Type": "application/json", ...(token ? { "Authorization": `Bearer ${token}` } : {}) },
                 body: JSON.stringify({ html }),
             });
 
