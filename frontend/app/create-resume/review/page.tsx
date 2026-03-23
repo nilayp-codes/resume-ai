@@ -51,7 +51,7 @@ function ReviewContent() {
         setTemplate(newTemplate as TemplateType);
         if (rid) {
             try {
-                await resumeApi.update(rid, { template_type: newTemplate });
+                await resumeApi.update(rid, { template_type: newTemplate as any });
             } catch {
                 console.warn('Failed to save template change');
             }
