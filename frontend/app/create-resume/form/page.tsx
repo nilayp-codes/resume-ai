@@ -718,9 +718,13 @@ function FormContent() {
         if (step === 2) newTouched.add('education');
         setTouched(newTouched);
 
+        if (STEPS[step].required) {
+            const { valid } = validateStep(step, data);
+            if (!valid) { toast.error('Please fix the errors before continuing'); return; }
+        }
+
         const { valid } = validateStep(step, data);
-        if (!valid) { toast.error('Please fix the errors before continuing'); return; }
-        setValidSteps(prev => new Set(prev).add(step));
+        if (valid) setValidSteps(prev => new Set(prev).add(step));
         setStep(step + 1);
     };
 
@@ -729,18 +733,39 @@ function FormContent() {
         if (step === 0) { newTouched.add('full_name'); newTouched.add('email'); }
         setTouched(newTouched);
         const { valid } = validateStep(step, data);
-        if (!valid) { toast.error('Please fix the errors before continuing'); return; }
-        if (!currentStepValid) { toast.error('Check required fields'); return; }
+        if (STEPS[step].required && !valid) { toast.error('Please fix the errors before continuing'); return; }
+
         setSaving(true);
-        if (saveStatus === 'saving') {
-            // Wait briefly if an auto-save is in flight
-            await new Promise(resolve => setTimeout(resolve, 1000));
+        try {
+            const rd = data as any;
+            let finalId = savedId;
+
+            if (savedId) {
+                await resumeApi.update(savedId, {
+                    title, resume_data: rd, template_type: templateType,
+                    color_theme: colorTheme, font_family: fontFamily,
+                    save_version: true, version_note: 'Final save before review'
+                });
+            } else {
+                const created = await resumeApi.create({
+                    title, resume_data: rd, template_type: templateType,
+                    color_theme: colorTheme, font_family: fontFamily
+                });
+                finalId = created.id;
+                setSavedId(created.id);
+            }
+
+            if (!finalId) {
+                toast.error('Failed to save resume. Please try again.');
+                return;
+            }
+
+            router.push(`/create-resume/review?template=${templateType}&id=${finalId}`);
+        } catch (err) {
+            toast.error(extractApiError(err));
+        } finally {
+            setSaving(false);
         }
-        if (!rid) {
-            toast.error('Please save your resume first');
-            return;
-        }
-        router.push(`/create-resume/review?template=${templateType}&id=${rid}`);
     };
 
     const goToStep = (s: number) => {
