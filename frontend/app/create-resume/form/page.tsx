@@ -651,13 +651,55 @@ function FormContent() {
     const [touched, setTouched] = useState<Set<string>>(new Set());
     const timer = useRef<NodeJS.Timeout | null>(null);
 
-    useEffect(() => { if (!isAuthenticated()) router.replace('/login'); if (rid) loadResume(rid); }, []);
+    const LOCAL_STORAGE_KEY = `resume-draft-${tpl}`;
+
+    useEffect(() => {
+        if (!isAuthenticated()) { router.replace('/login'); return; }
+
+        if (rid) {
+            // Loading existing resume from backend
+            loadResume(rid);
+        } else {
+            // New resume — try to restore from localStorage
+            try {
+                const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
+                if (saved) {
+                    const draft = JSON.parse(saved);
+                    if (draft.data) setData(draft.data);
+                    if (draft.title) setTitle(draft.title);
+                    if (draft.step !== undefined) setStep(draft.step);
+                    if (draft.savedId) setSavedId(draft.savedId);
+                    toast.success('Restored your unsaved draft');
+                }
+            } catch (e) {
+                console.warn('Failed to restore draft:', e);
+            }
+        }
+    }, []);
 
     useEffect(() => {
         const { valid, errors } = validateStep(step, data);
         setStepErrors(errors);
         setValidSteps(prev => { const next = new Set(prev); if (valid) next.add(step); else next.delete(step); return next; });
     }, [data, step]);
+
+    // Auto-save to localStorage on every change
+    useEffect(() => {
+        try {
+            const draft = {
+                data,
+                title,
+                templateType,
+                colorTheme,
+                fontFamily,
+                step,
+                savedId,
+            };
+            localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(draft));
+        } catch (e) {
+            console.warn('Failed to save draft to localStorage:', e);
+        }
+    }, [data, title, step, savedId]);
 
     const loadResume = async (id: string) => {
         try { const r = await resumeApi.get(id); setData(r.resume_data); setTitle(r.title); } catch { toast.error('Could not load'); } finally { setLoading(false); }
@@ -706,7 +748,9 @@ function FormContent() {
                 toast.success('Saved!');
             } else {
                 const c = await resumeApi.create({ title, resume_data: rd, template_type: templateType, color_theme: colorTheme, font_family: fontFamily });
-                setSavedId(c.id); router.replace(`/create-resume/form?template=${templateType}&id=${c.id}`); toast.success('Created!');
+                setSavedId(c.id);
+                try { localStorage.removeItem(LOCAL_STORAGE_KEY); } catch {}
+                router.replace(`/create-resume/form?template=${templateType}&id=${c.id}`); toast.success('Created!');
             }
         } catch (err) { toast.error(extractApiError(err)); } finally { setSaving(false); }
     };
@@ -760,6 +804,7 @@ function FormContent() {
                 return;
             }
 
+            try { localStorage.removeItem(LOCAL_STORAGE_KEY); } catch {}
             router.push(`/create-resume/review?template=${templateType}&id=${finalId}`);
         } catch (err) {
             toast.error(extractApiError(err));
