@@ -51,7 +51,7 @@ class GeminiService:
                 contents=prompt,
                 config={
                     "temperature": 0.7,
-                    "max_output_tokens": 800
+                    "max_output_tokens": 2000
                 }
             )
 
@@ -74,17 +74,28 @@ class GeminiService:
         prompt = f"""
 You are an ATS-optimized resume expert.
 Improve the following resume text to be more impactful and professional.
-Return ONLY the improved text.
+Keep the same meaning but use stronger action verbs and quantifiable results.
+Return ONLY the improved text as a complete sentence or paragraph. Never truncate.
 
 Context: {context}
-Text:
+Original text:
 {text}
+
+Improved text:
 """
         return await self._generate_content(prompt, user_id)
 
     async def generate_bullets(self, company: str, job_title: str, skills: str, user_id: str) -> List[str]:
         prompt = f"""
-Generate exactly 4 strong professional resume bullets.
+Generate exactly 4 strong professional resume bullet points for the following role.
+Each bullet MUST:
+- Start with a strong action verb (Led, Developed, Implemented, etc.)
+- Be a complete sentence of 10-20 words
+- Include measurable impact where possible
+- Be ATS-friendly with relevant keywords
+
+Return ONLY the 4 bullets, one per line. No numbering, no dashes, no extra text.
+
 Company: {company}
 Role: {job_title}
 Skills: {skills}
@@ -96,24 +107,26 @@ Skills: {skills}
         prompt = f"""
 You are an expert ATS resume writer.
 
-Write a cohesive, professional resume summary in EXACTLY 4 sentences.
+Write a professional resume summary in EXACTLY 3-4 sentences as a single cohesive paragraph.
 
 STRICT RULES:
-- Output a single, cohesive paragraph.
-- Produce EXACTLY 4 sentences.
-- Each sentence must be 15–25 words.
-- Do NOT exceed 110 total words.
-- Do NOT use bullet points or lists.
-- Do NOT force newline characters between sentences.
-- Include measurable impact where possible.
-- Avoid generic adjectives (hardworking, passionate, etc.).
-- No extra commentary. Returns ONLY the paragraph.
+- Output ONLY the paragraph. No headers, labels, or extra text.
+- Every sentence MUST be complete — never end mid-thought.
+- Each sentence should be 15-25 words.
+- Total length: 50-100 words maximum.
+- Include specific, measurable achievements where possible.
+- Use strong action verbs and industry keywords.
+- Avoid generic phrases like "hardworking", "passionate", "team player".
+- Do NOT use bullet points, lists, or line breaks.
+- The summary must feel complete and polished — never truncated.
 
 CANDIDATE DETAILS:
 Name: {full_name}
 Target Role: {job_title}
 Key Skills: {skills}
 Experience: {experience_years}
+
+Write the summary now:
 """
         return await self._generate_content(prompt, user_id)
 
