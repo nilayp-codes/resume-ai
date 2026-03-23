@@ -241,3 +241,32 @@ body {
   }
 }
 
+/* ─── Typography Consistency ─────────────────── */
+h1, h2, h3 {
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+}
+
+h1 { font-weight: 800; }
+h2 { font-weight: 700; }
+h3 { font-weight: 600; }
+
+p {
+    line-height: 1.6;
+}
+
+/* ─── Button base transitions ────────────────── */
+button, a {
+    transition: all 0.2s ease;
+}
+
+/* ─── Focus visible for accessibility ─────────── */
+button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+
+/* ─── Smooth scrolling ────────────────────────── */
+html {
+    scroll-behavior: smooth;
+}
