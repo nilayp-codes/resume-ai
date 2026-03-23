@@ -736,6 +736,10 @@ function FormContent() {
             // Wait briefly if an auto-save is in flight
             await new Promise(resolve => setTimeout(resolve, 1000));
         }
+        if (!rid) {
+            toast.error('Please save your resume first');
+            return;
+        }
         router.push(`/create-resume/review?template=${templateType}&id=${rid}`);
     };
 

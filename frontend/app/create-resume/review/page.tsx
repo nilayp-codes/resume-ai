@@ -26,7 +26,11 @@ function ReviewContent() {
     useEffect(() => {
         if (!isAuthenticated()) { router.replace('/login'); return; }
         if (rid) loadResume(rid);
-        else { setLoading(false); toast.error('No resume ID provided'); }
+        else {
+            setLoading(false);
+            toast.error('Resume not saved yet. Please try again.');
+            router.push('/dashboard');
+        }
     }, []);
 
     const loadResume = async (id: string) => {
