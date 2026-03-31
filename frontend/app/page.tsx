@@ -9,9 +9,9 @@ import Workflow from '@/components/Workflow';
 import AiDemo from '@/components/AiDemo';
 import CTA from '@/components/CTA';
 import Loader from '@/components/Loader';
-import BackgroundGlow from '@/components/BackgroundGlow';
 import TemplatesShowcase from '@/components/TemplatesShowcase';
-import { motion, AnimatePresence, Variants } from 'framer-motion';
+import TileReveal from '@/components/TileReveal';
+import { motion, Variants } from 'framer-motion';
 
 const sectionVariants: Variants = {
     hidden: { opacity: 0, y: 40 },
@@ -30,14 +30,14 @@ export default function HomePage() {
   if (!isMounted) return <Loader />;
 
   return (
-    <div style={{ minHeight: '100vh', background: '#ffffff', overflowX: 'hidden' }}>
+    <div style={{ minHeight: '100vh', background: '#FAFAF9', overflowX: 'hidden' }}>
       <Navbar authed={authed} />
-      <BackgroundGlow />
 
       {/* Hero Section */}
-      <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={sectionVariants}>
-        <Hero authed={authed} />
-      </motion.div>
+      <Hero authed={authed} />
+
+      {/* Tile Reveal Transition */}
+      <TileReveal />
 
       {/* Feature Highlights */}
       <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={sectionVariants}>
