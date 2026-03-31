@@ -66,12 +66,59 @@ export default function HomePage() {
 
       {/* Footer */}
       <footer style={{
-        borderTop: '1px solid #e5e7eb', padding: '40px 24px',
-        textAlign: 'center' as const, background: '#ffffff',
+          background: '#1E1E1E',
+          padding: '80px 40px 40px',
+          position: 'relative',
+          overflow: 'hidden',
       }}>
-        <p style={{ fontSize: 14, color: '#9ca3af', margin: 0, fontWeight: 500 }}>
-          © 2026 ResumeAI. All rights reserved.
-        </p>
+          <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap' as const, gap: 48, marginBottom: 80 }}>
+                  <div>
+                      <p style={{
+                          fontFamily: "'Clash Display', sans-serif",
+                          fontSize: 24, fontWeight: 700,
+                          textTransform: 'uppercase' as const,
+                          color: '#E4E2DD', letterSpacing: '0.05em',
+                          marginBottom: 16,
+                      }}>
+                          ResumeAI
+                      </p>
+                      <p style={{
+                          fontFamily: "'Satoshi', sans-serif",
+                          fontSize: 14, color: 'rgba(228,226,221,0.5)',
+                          maxWidth: 280, lineHeight: 1.6,
+                      }}>
+                          AI-powered resume builder with professional templates and ATS-friendly PDF export.
+                      </p>
+                  </div>
+                  <div style={{ display: 'flex', gap: 64 }}>
+                      <div>
+                          <p style={{ fontFamily: "'Satoshi', sans-serif", fontSize: 12, fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase' as const, color: 'rgba(228,226,221,0.4)', marginBottom: 16 }}>Product</p>
+                          <div style={{ display: 'flex', flexDirection: 'column' as const, gap: 10 }}>
+                              {['Templates', 'AI Writer', 'PDF Export', 'Dashboard'].map(item => (
+                                  <span key={item} style={{ fontFamily: "'Satoshi', sans-serif", fontSize: 14, color: 'rgba(228,226,221,0.6)' }}>{item}</span>
+                              ))}
+                          </div>
+                      </div>
+                      <div>
+                          <p style={{ fontFamily: "'Satoshi', sans-serif", fontSize: 12, fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase' as const, color: 'rgba(228,226,221,0.4)', marginBottom: 16 }}>Company</p>
+                          <div style={{ display: 'flex', flexDirection: 'column' as const, gap: 10 }}>
+                              {['About', 'GitHub', 'Contact', 'Privacy'].map(item => (
+                                  <span key={item} style={{ fontFamily: "'Satoshi', sans-serif", fontSize: 14, color: 'rgba(228,226,221,0.6)' }}>{item}</span>
+                              ))}
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <div style={{ borderTop: '1px solid rgba(228,226,221,0.1)', paddingTop: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <p style={{ fontFamily: "'Satoshi', sans-serif", fontSize: 13, color: 'rgba(228,226,221,0.3)', margin: 0 }}>
+                      © 2026 ResumeAI. All rights reserved.
+                  </p>
+                  <p style={{ fontFamily: "'Satoshi', sans-serif", fontSize: 13, color: 'rgba(228,226,221,0.3)', margin: 0 }}>
+                      Built by Nilay Pandey
+                  </p>
+              </div>
+          </div>
       </footer>
     </div>
   );
