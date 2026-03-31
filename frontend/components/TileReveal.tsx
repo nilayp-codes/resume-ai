@@ -1,24 +1,20 @@
 'use client';
 
 import { useRef, useEffect, useState } from 'react';
-import { useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 
-const ROWS = 8;
-const COLS = 12;
-const MARQUEE_LINES = [
-    { text: 'RESUMES ARE BROKEN.', color: 'rgba(255,255,255,0.6)' },
-    { text: 'RESUMES ARE BROKEN.', color: 'rgba(255,255,255,0.4)' },
-    { text: 'RESUMES ARE BROKEN.', color: 'rgba(255,255,255,0.8)' },
-    { text: 'RESUMES ARE BROKEN.', color: 'rgba(255,255,255,0.3)' },
-    { text: 'FIX IT WITH AI.', color: '#2563EB' },
-    { text: 'FIX IT WITH AI.', color: 'rgba(37,99,235,0.7)' },
-    { text: 'FIX IT WITH AI.', color: 'rgba(37,99,235,0.4)' },
-    { text: 'FIX IT WITH AI.', color: 'rgba(37,99,235,0.2)' },
+const LINES = [
+    { text: 'RESUMES ARE BROKEN.', speed: 18, direction: 'left' },
+    { text: 'FIX IT WITH AI.', speed: 22, direction: 'right' },
+    { text: 'RESUMES ARE BROKEN.', speed: 20, direction: 'left' },
+    { text: 'FIX IT WITH AI.', speed: 25, direction: 'right' },
+    { text: 'RESUMES ARE BROKEN.', speed: 17, direction: 'left' },
+    { text: 'FIX IT WITH AI.', speed: 23, direction: 'right' },
 ];
 
 export default function TileReveal() {
     const ref = useRef<HTMLDivElement>(null);
-    const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
+    const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end end'] });
     const [progress, setProgress] = useState(0);
 
     useEffect(() => {
@@ -26,64 +22,48 @@ export default function TileReveal() {
         return unsub;
     }, [scrollYProgress]);
 
-    const tiles = [];
-    for (let r = 0; r < ROWS; r++) {
-        for (let c = 0; c < COLS; c++) {
-            const idx = r * COLS + c;
-            const centerR = ROWS / 2;
-            const centerC = COLS / 2;
-            const dist = Math.sqrt((r - centerR) ** 2 + (c - centerC) ** 2);
-            const maxDist = Math.sqrt(centerR ** 2 + centerC ** 2);
-            const normalizedDist = dist / maxDist;
-            const tileProgress = Math.max(0, Math.min(1, (progress - 0.2 - normalizedDist * 0.3) * 4));
-
-            tiles.push(
-                <div key={idx} style={{
-                    position: 'absolute',
-                    left: `${(c / COLS) * 100}%`,
-                    top: `${(r / ROWS) * 100}%`,
-                    width: `${100 / COLS}%`,
-                    height: `${100 / ROWS}%`,
-                    background: '#FAFAF9',
-                    transform: `perspective(800px) rotateY(${tileProgress * 180}deg)`,
-                    transformOrigin: 'center',
-                    backfaceVisibility: 'hidden' as const,
-                    zIndex: tileProgress < 0.5 ? 10 : 0,
-                    transition: 'none',
-                }} />
-            );
-        }
-    }
+    const bgOpacity = Math.min(1, progress * 3);
+    const textOpacity = Math.max(0, Math.min(1, (progress - 0.2) * 2.5));
+    const statementOpacity = Math.max(0, Math.min(1, (progress - 0.6) * 3));
+    const statementScale = 0.9 + statementOpacity * 0.1;
 
     return (
-        <div ref={ref} style={{ height: '300vh', position: 'relative' }}>
+        <div ref={ref} style={{ height: '400vh', position: 'relative' }}>
             <div style={{
                 position: 'sticky', top: 0, height: '100vh',
-                background: '#0A0A0A', overflow: 'hidden',
+                overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center',
             }}>
-                {/* Background marquee text */}
+                {/* Dark background fading in */}
+                <div style={{
+                    position: 'absolute', inset: 0,
+                    background: '#0A0A0A',
+                    opacity: bgOpacity,
+                    transition: 'none',
+                }} />
+
+                {/* Marquee text wall */}
                 <div style={{
                     position: 'absolute', inset: 0,
                     display: 'flex', flexDirection: 'column', justifyContent: 'center',
+                    opacity: textOpacity,
                     overflow: 'hidden',
                 }}>
-                    {MARQUEE_LINES.map((line, i) => (
-                        <div key={i} style={{
-                            overflow: 'hidden', whiteSpace: 'nowrap',
-                        }}>
+                    {LINES.map((line, i) => (
+                        <div key={i} style={{ overflow: 'hidden', whiteSpace: 'nowrap' }}>
                             <div style={{
-                                display: 'inline-flex', gap: 0,
-                                animation: `marquee-${i % 2 === 0 ? 'left' : 'right'} ${20 + i * 3}s linear infinite`,
+                                display: 'inline-flex',
+                                animation: `marquee-${line.direction} ${line.speed}s linear infinite`,
                                 width: 'max-content',
                             }}>
-                                {Array(6).fill(null).map((_, j) => (
+                                {Array(8).fill(null).map((_, j) => (
                                     <span key={j} style={{
-                                        fontSize: 'clamp(40px, 8vw, 100px)',
+                                        fontSize: 'clamp(36px, 7vw, 90px)',
                                         fontWeight: 900,
                                         letterSpacing: '-0.04em',
-                                        color: line.color,
-                                        padding: '0 24px',
-                                        lineHeight: 1.1,
+                                        color: line.text.includes('FIX') ? '#DC2626' : 'rgba(255,255,255,0.7)',
+                                        padding: '0 20px',
+                                        lineHeight: 1.15,
+                                        fontFamily: "'Inter', sans-serif",
                                     }}>{line.text}</span>
                                 ))}
                             </div>
@@ -91,9 +71,35 @@ export default function TileReveal() {
                     ))}
                 </div>
 
-                {/* Tiles overlay */}
-                <div style={{ position: 'absolute', inset: 0 }}>
-                    {tiles}
+                {/* Center statement that appears last */}
+                <div style={{
+                    position: 'relative', zIndex: 20,
+                    opacity: statementOpacity,
+                    transform: `scale(${statementScale})`,
+                    textAlign: 'center' as const,
+                    background: 'rgba(10,10,10,0.85)',
+                    backdropFilter: 'blur(20px)',
+                    borderRadius: 4, padding: '48px 64px',
+                    maxWidth: 600,
+                }}>
+                    <h2 style={{
+                        fontSize: 'clamp(28px, 4vw, 48px)',
+                        fontWeight: 800,
+                        color: '#FAFAF9',
+                        letterSpacing: '-0.03em',
+                        lineHeight: 1.15,
+                        margin: 0, marginBottom: 16,
+                        fontFamily: "'Inter', sans-serif",
+                    }}>
+                        Your resume deserves<br />
+                        <span style={{ color: '#DC2626' }}>better than this.</span>
+                    </h2>
+                    <p style={{
+                        fontSize: 16, color: 'rgba(250,250,249,0.5)',
+                        lineHeight: 1.6, margin: 0,
+                    }}>
+                        Let AI help you build one that actually works.
+                    </p>
                 </div>
             </div>
         </div>
