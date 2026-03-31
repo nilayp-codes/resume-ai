@@ -330,3 +330,99 @@ html {
     from { opacity: 0; transform: translateY(8px); }
     to { opacity: 1; transform: translateY(0); }
 }
+
+/* ═══════════════════════════════════════════════ */
+/* RAW FORM — Brutalist Design System             */
+/* ═══════════════════════════════════════════════ */
+
+:root {
+    --base: #E4E2DD;
+    --primary: #1E1E1E;
+    --accent-red: #DB4A2B;
+    --accent-orange: #F8A348;
+    --accent-pink: #FF89A9;
+    --muted: #444444;
+    --surface: #D9D6D0;
+    --font-display: 'Clash Display', sans-serif;
+    --font-body: 'Satoshi', sans-serif;
+}
+
+/* Selection color */
+::selection {
+    background: var(--accent-red);
+    color: #ffffff;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-track {
+    background: var(--base);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--accent-red);
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #c43d22;
+}
+
+/* Global entrance animation */
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.brutalist-enter {
+    animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Brutalist button base */
+.btn-brutalist {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 16px 32px;
+    background: var(--primary);
+    color: var(--base);
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: none;
+    border-radius: 0;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: color 0.3s ease;
+}
+
+.btn-brutalist::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #ffffff;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-out;
+    z-index: 0;
+}
+
+.btn-brutalist:hover::before {
+    transform: translateX(0);
+}
+
+.btn-brutalist:hover {
+    color: var(--accent-red);
+}
+
+.btn-brutalist span {
+    position: relative;
+    z-index: 1;
+}

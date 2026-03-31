@@ -30,10 +30,11 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
     return (
         <html lang="en" className={`${inter.variable} ${outfit.variable}`} suppressHydrationWarning>
-            <body className="font-sans antialiased text-slate-900 bg-white" suppressHydrationWarning>
-                <div style={{
-                    animation: 'pageFadeIn 0.3s ease-out',
-                }}>
+            <head>
+                <link href="https://api.fontshare.com/v2/css?f[]=clash-display@200;300;400;500;600;700&f[]=satoshi@300;400;500;700&display=swap" rel="stylesheet" />
+            </head>
+            <body className="font-sans antialiased" style={{ background: '#E4E2DD', color: '#1E1E1E' }} suppressHydrationWarning>
+                <div style={{ animation: 'pageFadeIn 0.3s ease-out' }}>
                     {children}
                 </div>
                 <Toaster
