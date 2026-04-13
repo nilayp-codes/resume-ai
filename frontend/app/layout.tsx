@@ -3,10 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
 
-const inter = Inter({
-    subsets: ["latin"],
-    variable: '--font-inter',
-});
+const inter = Inter({ subsets: ["latin"], variable: '--font-inter' });
 
 export const metadata: Metadata = {
     title: "ResumeAI — Build Professional Resumes",
@@ -22,7 +19,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
     return (
         <html lang="en" className={inter.variable} suppressHydrationWarning>
-            <body style={{ margin: 0, background: '#FAFAF9', color: '#0A0A0A', fontFamily: "'Inter', sans-serif" }} suppressHydrationWarning>
+            <body style={{ margin: 0, background: '#FAFAF9', color: '#0A0A0A', fontFamily: "'Inter', var(--font-inter), system-ui, sans-serif" }} suppressHydrationWarning>
                 {children}
                 <Toaster position="top-right" richColors closeButton duration={4000} />
             </body>
