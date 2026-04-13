@@ -1,50 +1,128 @@
 'use client';
 
 import Link from 'next/link';
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, useCallback } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 
 interface HeroProps { authed: boolean; }
 
-const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*';
+const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*';
 
-function AutoScrambleText({ text, color = '#0A0A0A', delay = 0 }: { text: string; color?: string; delay?: number }) {
-    const [display, setDisplay] = useState<string[]>(text.split('').map(c => c === ' ' ? ' ' : CHARS[Math.floor(Math.random() * CHARS.length)]));
-    const [revealed, setRevealed] = useState(0);
+const TAGLINES = [
+    { line1: 'Build resumes', line2: 'that work.' },
+    { line1: 'Land interviews', line2: 'not rejections.' },
+    { line1: 'Write smarter', line2: 'with AI.' },
+    { line1: 'Stand out', line2: 'get hired.' },
+];
 
-    useEffect(() => {
-        const startTimeout = setTimeout(() => {
-            const interval = setInterval(() => {
-                setRevealed(prev => {
-                    if (prev >= text.length) { clearInterval(interval); return prev; }
-                    return prev + 1;
-                });
-            }, 60);
-            return () => clearInterval(interval);
-        }, delay);
-        return () => clearTimeout(startTimeout);
-    }, [text, delay]);
+function useLoopingScramble(texts: string[], cycleDuration: number = 6000, scrambleDuration: number = 2000) {
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [display, setDisplay] = useState<string[]>([]);
+    const [phase, setPhase] = useState<'showing' | 'scrambling-out' | 'scrambling-in'>('scrambling-in');
+
+    const currentText = texts[currentIndex];
 
     useEffect(() => {
-        const scrambleInterval = setInterval(() => {
-            setDisplay(text.split('').map((char, i) => {
+        setDisplay(currentText.split('').map(c => c === ' ' ? ' ' : CHARS[Math.floor(Math.random() * CHARS.length)]));
+        setPhase('scrambling-in');
+    }, [currentIndex]);
+
+    // Scramble in: reveal characters one by one
+    useEffect(() => {
+        if (phase !== 'scrambling-in') return;
+        let revealed = 0;
+        const totalChars = currentText.length;
+        const charInterval = scrambleDuration / totalChars;
+
+        const revealInterval = setInterval(() => {
+            revealed++;
+            setDisplay(currentText.split('').map((char, i) => {
                 if (char === ' ') return ' ';
                 if (i < revealed) return char;
                 return CHARS[Math.floor(Math.random() * CHARS.length)];
             }));
-        }, 40);
-        return () => clearInterval(scrambleInterval);
-    }, [revealed, text]);
+            if (revealed >= totalChars) {
+                clearInterval(revealInterval);
+                setPhase('showing');
+            }
+        }, charInterval);
+
+        // Keep scrambling unrevealed chars
+        const scrambleInterval = setInterval(() => {
+            setDisplay(prev => prev.map((char, i) => {
+                if (currentText[i] === ' ') return ' ';
+                if (i < revealed) return currentText[i];
+                return CHARS[Math.floor(Math.random() * CHARS.length)];
+            }));
+        }, 50);
+
+        return () => { clearInterval(revealInterval); clearInterval(scrambleInterval); };
+    }, [phase, currentText, scrambleDuration]);
+
+    // Show phase: wait then start scrambling out
+    useEffect(() => {
+        if (phase !== 'showing') return;
+        const timeout = setTimeout(() => setPhase('scrambling-out'), cycleDuration - scrambleDuration * 2);
+        return () => clearTimeout(timeout);
+    }, [phase, cycleDuration, scrambleDuration]);
+
+    // Scramble out: replace characters with random ones
+    useEffect(() => {
+        if (phase !== 'scrambling-out') return;
+        let scrambled = 0;
+        const totalChars = currentText.length;
+        const charInterval = scrambleDuration / totalChars;
+
+        const outInterval = setInterval(() => {
+            scrambled++;
+            setDisplay(currentText.split('').map((char, i) => {
+                if (char === ' ') return ' ';
+                if (i < scrambled) return CHARS[Math.floor(Math.random() * CHARS.length)];
+                return char;
+            }));
+            if (scrambled >= totalChars) {
+                clearInterval(outInterval);
+                setCurrentIndex(prev => (prev + 1) % texts.length);
+            }
+        }, charInterval);
+
+        const scrambleInterval = setInterval(() => {
+            setDisplay(prev => prev.map((char, i) => {
+                if (currentText[i] === ' ') return ' ';
+                if (i < scrambled) return CHARS[Math.floor(Math.random() * CHARS.length)];
+                return char;
+            }));
+        }, 50);
+
+        return () => { clearInterval(outInterval); clearInterval(scrambleInterval); };
+    }, [phase, currentText, scrambleDuration, currentIndex]);
+
+    return { display, phase, currentIndex };
+}
+
+function ScrambleDisplay({ texts1, texts2 }: { texts1: string[]; texts2: string[] }) {
+    const { display: display1, phase, currentIndex } = useLoopingScramble(texts1, 7000, 1800);
+    const { display: display2 } = useLoopingScramble(texts2, 7000, 1800);
 
     return (
-        <span>
-            {display.map((char, i) => (
-                <span key={i} style={{
-                    color: i < revealed ? color : '#D4D4D4',
-                    transition: 'color 0.15s ease',
-                }}>{char}</span>
-            ))}
-        </span>
+        <>
+            <div>
+                {display1.map((char, i) => (
+                    <span key={`l1-${i}`} style={{
+                        color: char === texts1[currentIndex]?.[i] ? '#DC2626' : 'rgba(220,38,38,0.3)',
+                        transition: 'color 0.15s ease',
+                    }}>{char}</span>
+                ))}
+            </div>
+            <div>
+                {display2.map((char, i) => (
+                    <span key={`l2-${i}`} style={{
+                        color: char === texts2[currentIndex]?.[i] ? '#0A0A0A' : 'rgba(10,10,10,0.2)',
+                        transition: 'color 0.15s ease',
+                    }}>{char}</span>
+                ))}
+            </div>
+        </>
     );
 }
 
@@ -85,14 +163,16 @@ export default function Hero({ authed }: HeroProps) {
                         letterSpacing: '-0.05em', lineHeight: 0.9, marginBottom: 48,
                         fontFamily: "'Inter', sans-serif",
                     }}>
-                        <AutoScrambleText text="Build resumes" color="#0A0A0A" delay={500} /><br />
-                        <AutoScrambleText text="that work." color="#2563EB" delay={1200} />
+                        <ScrambleDisplay
+                            texts1={TAGLINES.map(t => t.line1)}
+                            texts2={TAGLINES.map(t => t.line2)}
+                        />
                     </h1>
 
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 2.5 }}
+                        transition={{ duration: 0.8, delay: 1.5 }}
                         style={{
                             display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between',
                             flexWrap: 'wrap' as const, gap: 32,
@@ -110,7 +190,7 @@ export default function Hero({ authed }: HeroProps) {
                                 display: 'inline-flex', alignItems: 'center', gap: 8,
                             }}>Start Building →</Link>
                             <Link href={authed ? '/dashboard' : '/login'} style={{
-                                fontSize: 14, fontWeight: 500, color: '#2563EB', textDecoration: 'none',
+                                fontSize: 14, fontWeight: 500, color: '#DC2626', textDecoration: 'none',
                             }}>View Templates</Link>
                         </div>
                     </motion.div>
