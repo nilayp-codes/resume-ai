@@ -1,66 +1,75 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-interface CTAProps { authed: boolean; }
+interface CTAProps {
+    authed: boolean;
+}
 
 export default function CTA({ authed }: CTAProps) {
     return (
-        <section style={{ background: '#1E1E1E', padding: '120px 40px', position: 'relative', overflow: 'hidden' }}>
-            {/* Background year text */}
-            <div style={{
-                position: 'absolute', bottom: -40, right: 40,
-                fontFamily: "'Clash Display', sans-serif",
-                fontSize: 'clamp(100px, 20vw, 300px)',
-                fontWeight: 700, color: 'rgba(255,255,255,0.03)',
-                lineHeight: 1, pointerEvents: 'none',
-            }}>
-                2026
-            </div>
+        <section style={{ padding: '80px 24px', background: '#ffffff' }}>
+            <motion.div
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                viewport={{ once: true, margin: "-50px" }}
+                style={{
+                    maxWidth: 760, margin: '0 auto', textAlign: 'center' as const,
+                    background: 'linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%)',
+                    borderRadius: 24, padding: '80px 48px',
+                    boxShadow: '0 25px 50px -12px rgba(139, 92, 246, 0.4)',
+                    position: 'relative', overflow: 'hidden',
+                }}
+            >
+                {/* Decorative glow */}
+                <div style={{
+                    position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)',
+                    width: 400, height: 400, background: '#2563eb', filter: 'blur(100px)', opacity: 0.2,
+                    borderRadius: '50%', pointerEvents: 'none',
+                }} />
+                <div style={{
+                    position: 'absolute', bottom: -50, right: -50,
+                    width: 300, height: 300, background: 'rgba(255,255,255,0.05)',
+                    borderRadius: '50%', pointerEvents: 'none',
+                }} />
 
-            <div style={{ maxWidth: 1200, margin: '0 auto', position: 'relative', zIndex: 10 }}>
-                <motion.div
-                    initial={{ opacity: 0, y: 40 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                    viewport={{ once: true }}
-                >
-                    <p style={{
-                        fontFamily: "'Satoshi', sans-serif",
-                        fontSize: 14, fontWeight: 500,
-                        letterSpacing: '0.15em', textTransform: 'uppercase' as const,
-                        color: '#DB4A2B', marginBottom: 24,
-                    }}>
-                        Ready?
-                    </p>
+                <div style={{ position: 'relative', zIndex: 10 }}>
                     <h2 style={{
-                        fontFamily: "'Clash Display', sans-serif",
-                        fontSize: 'clamp(40px, 8vw, 96px)',
-                        fontWeight: 700, textTransform: 'uppercase' as const,
-                        letterSpacing: '-0.04em', lineHeight: 0.9,
-                        color: '#E4E2DD', margin: 0, marginBottom: 48,
+                        fontSize: 40, fontWeight: 800, color: '#ffffff',
+                        letterSpacing: '-0.02em', lineHeight: 1.2, margin: 0,
                     }}>
-                        Land Your<br />Next Role
+                        Ready to land your next role?
                     </h2>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap' as const, gap: 32 }}>
-                        <p style={{
-                            fontFamily: "'Satoshi', sans-serif",
-                            fontSize: 17, lineHeight: 1.7,
-                            color: 'rgba(228,226,221,0.6)',
-                            maxWidth: 400, margin: 0,
-                        }}>
-                            Join thousands of professionals who trust ResumeAI to create resumes that get results.
-                        </p>
-                        <Link href={authed ? '/create-resume' : '/register'} className="btn-brutalist" style={{ background: '#E4E2DD', color: '#1E1E1E' }}>
-                            <span style={{ display: 'flex', alignItems: 'center', gap: 8, position: 'relative', zIndex: 1 }}>
-                                Get Started Free <ArrowUpRight size={16} strokeWidth={2.5} />
-                            </span>
-                        </Link>
-                    </div>
-                </motion.div>
-            </div>
+                    <p style={{
+                        fontSize: 18, color: 'rgba(255,255,255,0.7)', marginTop: 16, lineHeight: 1.6,
+                        maxWidth: 480, margin: '16px auto 0'
+                    }}>
+                        Join thousands of professionals who trust ResumeAI
+                        to create resumes that get results.
+                    </p>
+                    <Link href={authed ? '/create-resume' : '/register'} style={{
+                        display: 'inline-flex', alignItems: 'center', gap: 8,
+                        marginTop: 40, padding: '18px 40px', background: '#ffffff', color: '#111827',
+                        fontSize: 16, fontWeight: 700, borderRadius: 12,
+                        textDecoration: 'none', transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                    }}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.transform = 'translateY(-4px)';
+                            e.currentTarget.style.boxShadow = '0 20px 25px -5px rgba(255, 255, 255, 0.3), 0 10px 10px -5px rgba(255, 255, 255, 0.1)';
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.transform = 'translateY(0)';
+                            e.currentTarget.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)';
+                        }}
+                    >
+                        Get Started Free <ArrowRight size={18} strokeWidth={2.5} color="#2563eb" />
+                    </Link>
+                </div>
+            </motion.div>
         </section>
     );
 }

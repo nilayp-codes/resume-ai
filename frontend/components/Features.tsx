@@ -8,122 +8,97 @@ const features = [
         icon: Sparkles,
         title: 'AI Resume Writing',
         description: 'Our AI suggests impactful bullet points and improves your wording to make every line count.',
-        accent: '#DB4A2B',
+        color: '#8b5cf6', // Purple
+        bg: '#f3e8ff',
     },
     {
         icon: Shield,
         title: 'ATS Optimization',
         description: 'Resumes are tuned to pass applicant tracking systems so your application reaches human reviewers.',
-        accent: '#F8A348',
+        color: '#22c55e', // Green
+        bg: '#dcfce7',
     },
     {
         icon: Zap,
-        title: 'Instant Templates',
+        title: 'Instant Professional Templates',
         description: 'Choose from polished, recruiter-approved templates and generate a job-ready resume in minutes.',
-        accent: '#FF89A9',
+        color: '#3b82f6', // Blue
+        bg: '#dbeafe',
     },
 ];
 
 export default function Features() {
     return (
-        <section style={{ background: '#E4E2DD', padding: '120px 40px' }}>
-            <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+        <section style={{ background: '#ffffff', padding: '100px 24px' }}>
+            <div style={{ maxWidth: 1080, margin: '0 auto' }}>
                 {/* Section Header */}
                 <motion.div
                     initial={{ opacity: 0, y: 40 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                    viewport={{ once: true }}
-                    style={{ marginBottom: 80 }}
+                    transition={{ duration: 0.6, ease: "easeOut" }}
+                    viewport={{ once: true, margin: "-50px" }}
+                    style={{ textAlign: 'center' as const, marginBottom: 56 }}
                 >
-                    <p style={{
-                        fontFamily: "'Satoshi', sans-serif",
-                        fontSize: 14, fontWeight: 500,
-                        letterSpacing: '0.15em', textTransform: 'uppercase' as const,
-                        color: '#DB4A2B', marginBottom: 16,
-                    }}>
-                        Why ResumeAI
-                    </p>
+                    <p style={{ fontSize: 14, fontWeight: 600, color: '#2563eb', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>Why ResumeAI</p>
                     <h2 style={{
-                        fontFamily: "'Clash Display', sans-serif",
-                        fontSize: 'clamp(36px, 6vw, 72px)',
-                        fontWeight: 700, textTransform: 'uppercase' as const,
-                        letterSpacing: '-0.04em', lineHeight: 0.9,
-                        color: '#1E1E1E', margin: 0,
+                        fontSize: 40, fontWeight: 800, color: '#111827',
+                        letterSpacing: '-0.02em', lineHeight: 1.1, margin: 0,
                     }}>
-                        How We Help<br />You Get Interviews
+                        How ResumeAI Helps You Get Interviews
                     </h2>
+                    <p style={{ fontSize: 17, color: '#6b7280', marginTop: 12, maxWidth: 520, marginLeft: 'auto', marginRight: 'auto' }}>
+                        Every feature is designed to maximize your chances of landing the job.
+                    </p>
                 </motion.div>
 
                 {/* Feature Cards */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 2 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 28 }}>
                     {features.map((f, i) => (
                         <motion.div
                             key={f.title}
                             initial={{ opacity: 0, y: 40 }}
                             whileInView={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, delay: i * 0.15, ease: [0.16, 1, 0.3, 1] }}
-                            viewport={{ once: true }}
+                            transition={{ duration: 0.6, delay: i * 0.08, ease: "easeOut" }}
+                            viewport={{ once: true, margin: "-50px" }}
                             style={{
-                                background: '#D9D6D0',
-                                padding: '48px 36px',
-                                position: 'relative',
-                                overflow: 'hidden',
-                                cursor: 'default',
-                                transition: 'background 0.3s ease',
+                                background: 'rgba(255, 255, 255, 0.85)',
+                                backdropFilter: 'blur(12px)',
+                                borderRadius: 16, padding: 32,
+                                textAlign: 'center' as const,
+                                border: '1px solid rgba(0,0,0,0.04)',
+                                boxShadow: '0 20px 40px rgba(0, 0, 0, 0.08)',
+                                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                             }}
-                            onMouseEnter={e => e.currentTarget.style.background = '#1E1E1E'}
-                            onMouseLeave={e => e.currentTarget.style.background = '#D9D6D0'}
+                            onMouseEnter={(e: React.MouseEvent<HTMLDivElement>) => {
+                                e.currentTarget.style.boxShadow = `0 20px 40px -10px ${f.color}20`;
+                                e.currentTarget.style.transform = 'translateY(-8px)';
+                                e.currentTarget.style.borderColor = `${f.color}40`;
+                            }}
+                            onMouseLeave={(e: React.MouseEvent<HTMLDivElement>) => {
+                                e.currentTarget.style.boxShadow = '0 20px 40px rgba(0, 0, 0, 0.08)';
+                                e.currentTarget.style.transform = 'translateY(0)';
+                                e.currentTarget.style.borderColor = 'rgba(0,0,0,0.04)';
+                            }}
                         >
-                            {/* Number */}
-                            <span style={{
-                                fontFamily: "'Clash Display', sans-serif",
-                                fontSize: 96, fontWeight: 700,
-                                position: 'absolute', top: -10, right: 16,
-                                opacity: 0.06, lineHeight: 1,
-                                color: '#1E1E1E',
-                            }}>
-                                0{i + 1}
-                            </span>
-
                             {/* Icon */}
                             <div style={{
-                                width: 48, height: 48, marginBottom: 32,
-                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                width: 56, height: 56, borderRadius: 16,
+                                background: f.bg, display: 'flex', alignItems: 'center',
+                                justifyContent: 'center', margin: '0 auto 24px',
+                                transition: 'transform 0.3s ease',
                             }}>
-                                <f.icon size={28} color={f.accent} strokeWidth={1.5} />
+                                <f.icon size={28} color={f.color} strokeWidth={2} />
                             </div>
 
                             {/* Title */}
-                            <h3 style={{
-                                fontFamily: "'Clash Display', sans-serif",
-                                fontSize: 22, fontWeight: 600,
-                                textTransform: 'uppercase' as const,
-                                letterSpacing: '-0.02em',
-                                color: '#1E1E1E',
-                                marginBottom: 16,
-                                transition: 'color 0.3s ease',
-                            }}>
+                            <h3 style={{ fontSize: 20, fontWeight: 700, color: '#111827', marginBottom: 12 }}>
                                 {f.title}
                             </h3>
 
                             {/* Description */}
-                            <p style={{
-                                fontFamily: "'Satoshi', sans-serif",
-                                fontSize: 15, lineHeight: 1.7,
-                                color: '#444444',
-                                margin: 0,
-                                transition: 'color 0.3s ease',
-                            }}>
+                            <p style={{ fontSize: 15, lineHeight: 1.7, color: '#6b7280', margin: 0 }}>
                                 {f.description}
                             </p>
-
-                            {/* Bottom accent line */}
-                            <div style={{
-                                position: 'absolute', bottom: 0, left: 0,
-                                width: '100%', height: 3,
-                                background: f.accent,
-                            }} />
                         </motion.div>
                     ))}
                 </div>
